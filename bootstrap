@@ -45,13 +45,23 @@ ruby-install --system ruby 2.4
 pushd /usr/bin
 rm ruby
 ln -s /usr/local/bin/ruby ruby
+popd
+
+printf "Configure grub to boot to command line.\n"
+cp /etc/default/grub /etc/default/grub-orig
+sed -i '/GRUB_CMDLINE_LINUX_DEFAULT/s/^#//' /etc/default/grub
+sed -i '/GRUB_CMDLINE_LINUX_DEFAULT/s/^/#/' /etc/default/grub 
+sed -i '/GRUB_TERMINAL/s/^#//' /etc/default/grub 
+sed -i '/GRUB_CMDLINE_LINUX=""/ c\GRUB_CMDLINE_LINUX="text"' /etc/default/grub
+update-grub
+systemctl set-default multi-user.target
 
 printf "Installing Chef DK.\n"
 curl https://omnitruck.chef.io/install.sh | bash -s -- -P chefdk -c stable -v 2.0.28
 
 printf "Copying files from distribution directories to target directories.\n"
 cp ./scripts/* /usr/local/bin
-mkdir -p /root/chef-repo/cookbooks/debian_prep/spec/unit
+mkdir -p /root/chef-repo/cookbooks/debian_prep/spec/unit/recipes
 mkdir -p /root/chef-repo/cookbooks/debian_prep/recipes
 cp ./debian_prep/Gemfile /root/chef-repo/cookbooks/debian_prep/spec
 cp ./debian_prep/Rakefile /root/chef-repo/cookbooks/debian_prep/spec
