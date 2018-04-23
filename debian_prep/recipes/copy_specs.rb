@@ -2,7 +2,7 @@
 
 bash 'copy specs from bootstrap dir to chefspec dir' do 
   code <<-EOF
-    mkdir -p /root/chef-repo/cookbooks/ubuntu_prep/spec/unit/recipes
-    cp -r /root/bootstrap-ubuntu-server-16.04-dev-base/ubuntu_prep/spec/* /root/chef-repo/cookbooks/ubuntu_prep/spec/.
+    mkdir -p /root/chef-repo/cookbooks/debian_prep/spec/unit/recipes
+    cp -r /root/bootstrap-debian-9-dev-base/debian_prep/spec/* /root/chef-repo/cookbooks/debian_prep/spec/.
   EOF
 end 
