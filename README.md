@@ -20,17 +20,23 @@ Install Debian 9 as a VM (any [hypervisor](hypervisor.md)).
 
 When prompted, create user 'dev' with password 'developer'. Set the root password to 'admin'.
 
-On the "Software selections" form, choose "Gnome desktop" and "standard system utilities." 
+On the "Software selections" form, ensure the only selection is "standard system utilities." 
 
-### 1.3. Add user 'dev' to sodoers
+### 1.3. Add user 'dev' to sudoers
 
-Debian distros are configured to disallow direct login as 'root'. The installer does not create users with sudo privileges. 
+Debian distros are configured to disallow direct login as 'root'. The minimal installation we are doing doesn't install ```sudo``` at all. Add it now. 
 
 Log in as 'dev' and switch to 'root':
 
 ```shell 
 su - 
 [admin]
+``` 
+
+Then install ```sudo```. 
+
+```shell 
+apt install sudo 
 ``` 
 
 Now use ```visudo``` to grant sudo rights to user 'dev'.
@@ -55,7 +61,7 @@ dev      ALL=(ALL:ALL) ALL
 Save the file and return to user 'dev'. See if you can do a simple command that requires sudo, like this:
 
 ```shell 
-sudo ls -la /root 
+sudo ls -la /usr/bin 
 ``` 
 
 If that looks okay, proceed.
@@ -81,7 +87,7 @@ su -
 [admin]
 ```
 
-Clone the repository for Ubuntu Server 16.04:
+Clone the repository for building a template instance from Debian 9:
 
 ```shell 
 cd 
