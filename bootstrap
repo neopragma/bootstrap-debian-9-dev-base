@@ -1,0 +1,65 @@
+#!/bin/bash
+#----------------------------------------------------------
+# Bootstrap an instance of Debian 9 to be a template for
+# building lightweight software development environments.
+#
+# Run this script as root.
+# Assumes fresh install of Debian 9.
+#
+# This script installs a few things and sets some
+# configuration values to bring the instance up
+# to a state that it can run Chef, then it starts
+# chef-client to complete the provisioning using
+# Chef recipes.
+#
+# Version 0.1.0
+# 24 April 2018
+#----------------------------------------------------------
+
+[[ $EUID -ne 0 ]] && 'Please run the bootstrap script as root' && exit 1
+
+apt update -y
+apt dist-upgrade -y
+apt install -y openssh-server
+apt install -y build-essential
+apt install -y linux-headers-`uname -r`
+apt install -y dkms
+apt install -y ruby-bundler
+apt install -y curl
+
+printf "Installing a Ruby installer as Debian repos don't have 2.4.\n"
+cd
+wget -O ruby-install-0.6.1.tar.gz https://github.com/postmodern/ruby-install/archive/v0.6.1.tar.gz
+tar -xzf ruby-install-0.6.1.tar.gz
+cd ruby-install-0.6.1/
+make install
+
+cd
+rm -rf ruby-install-0.6.1
+rm ruby-install-0.6.1.tar.gz
+
+cd bootstrap-debian-9-dev-base
+
+printf "Installing Ruby 2.4 using ruby-install.\n"
+ruby-install --system ruby 2.4
+pushd /usr/bin
+rm ruby
+ln -s /usr/local/bin/ruby ruby
+
+printf "Installing Chef DK.\n"
+curl https://omnitruck.chef.io/install.sh | bash -s -- -P chefdk -c stable -v 2.0.28
+
+printf "Copying files from distribution directories to target directories.\n"
+cp ./scripts/* /usr/local/bin
+mkdir -p /root/chef-repo/cookbooks/debian_prep/spec/unit
+mkdir -p /root/chef-repo/cookbooks/debian_prep/recipes
+cp ./debian_prep/Gemfile /root/chef-repo/cookbooks/debian_prep/spec
+cp ./debian_prep/Rakefile /root/chef-repo/cookbooks/debian_prep/spec
+cp -r ./debian_prep/recipes/* /root/chef-repo/cookbooks/debian_prep/recipes
+cp ./debian_prep/spec/spec_helper.rb /root/chef-repo/cookbooks/debian_prep/spec/.
+cp -r ./debian_prep/spec/unit/recipes/* /root/chef-repo/cookbooks/debian_prep/spec/unit/recipes
+
+printf "Executing Chef to complete provisioning the instance.\n"
+cd /root/chef-repo/cookbooks
+chef-client --local-mode --override-runlist debian_prep
+
