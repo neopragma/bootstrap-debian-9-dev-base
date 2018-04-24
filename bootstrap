@@ -26,6 +26,7 @@ apt install -y linux-headers-`uname -r`
 apt install -y dkms
 apt install -y ruby-bundler
 apt install -y curl
+apt install -y dirmngr
 
 printf "Installing a Ruby installer as Debian repos don't have 2.4.\n"
 cd

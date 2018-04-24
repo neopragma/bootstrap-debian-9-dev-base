@@ -138,24 +138,10 @@ bootstrap-ubuntu-server-16.04-base/
 
 If all goes well, this will provision the instance as a base or template for building development environments. Check the results carefully in case of errors. There are many steps and anything can happen despite care in preparing the script. 
 
-Suggest you direct output to a file so you can browse the results with ```more``` or ```less```. Some steps take time, so it might be advisable to ```tail``` the output file to keep an eye on things. Open a second terminal window:
-
-```shell 
-sudo cd /root/bootstrap-debian-9-dev-base
-sudo touch bootstrap.out 
-sudo tail -f bootstrap.out 
-```
-
-Back in the first terminal window:
-
 ```shell 
 cd /root/bootstrap-debian-9-dev-base
-./bootstrap 2>&1 bootstrap.out 
+./bootstrap 
 ``` 
-
-RESUME HERE
-
-
 
 ### 3. Manual configuration of NeoVim.
 
