@@ -97,7 +97,7 @@ end
 
 bash 'copy neovim after indent files' do
   code <<-EOF
-    cp /root/bootstrap-debian-9-dev-base/neovim/after/indent/* /root/.config/nvim/after/indent. 
+    cp /root/bootstrap-debian-9-dev-base/neovim/after/indent/* /root/.config/nvim/after/indent/.
     EOF
 end
 
