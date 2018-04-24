@@ -86,6 +86,20 @@ git 'install neovim plugin vim-ruby' do
   destination '/root/.config/nvim/bundle/vim-ruby' 
   repository 'git://github.com/vim-ruby/vim-ruby.git'
 end 
+ 
+directory 'root nvim after indent' do
+  path '/root/.config/nvim/after/indent'
+  recursive true
+  owner 'root'
+  group 'root'
+  mode '0755'
+end 
+
+bash 'copy neovim after indent files' do
+  code <<-EOF
+    cp /root/bootstrap-debian-9-dev-base/neovim/after/indent/* /root/.config/nvim/after/indent. 
+    EOF
+end
 
 # Add Spacegray color scheme to neovim 
 directory 'root nvim pack vendor directory' do
